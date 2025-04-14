@@ -99,7 +99,7 @@ public class BasicAlgSort<T extends Comparable<? super T>> {
                         leftIndex = serIndex + 1;
                     }
                 }
-                for (int j = 1; j <leftIndex ; j--) {
+                for (int j = 1; j > leftIndex ; j--) {
                     array[j]= array[j-1];
                 }
                 array[leftIndex] = key;

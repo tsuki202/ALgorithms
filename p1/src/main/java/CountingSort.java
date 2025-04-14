@@ -2,7 +2,7 @@ package p1.src.main.java;
 
 import java.util.Arrays;
 public class CountingSort {
-    static void sort(int arr[]) {
+    public static void sort(int arr[]) {
         int n = arr.length; // записуємо у змінну n кількість елементів масиву
         int output[] = new int[n]; // створюємо вихідний масив на n елементів
 // створюємо додатковий масив для підрахунку кількості повторень

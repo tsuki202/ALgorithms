@@ -46,7 +46,7 @@ public class QuickSort <T extends Comparable <T>>{
         }
     }
 
-    private static int partitionDescending(int[] arr, int low, int high) {
+    private static int partitionDescending(Integer[] arr, int low, int high) {
         int pivot = arr[high]; // Опорний елемент (останній елемент)
         int i = low - 1;
 

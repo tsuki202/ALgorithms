@@ -1,6 +1,6 @@
-package p1.src.test.java;
 
 import java.util.Arrays;
+import p1.src.main.java.RadixSort;
 
 public class RadixSortTest {
     public static void main(String[] args) {
@@ -9,12 +9,11 @@ public class RadixSortTest {
         System.out.println("Оригінальний масив:");
         System.out.println(Arrays.toString(testArray));
 
-        RadixSort.radixSort(testArray);
+        RadixSort.radixSort(testArray);  // Виклик методу сортування
 
         System.out.println("Масив після RadixSort:");
         System.out.println(Arrays.toString(testArray));
 
-        // Завдання: вивести мінімальне та максимальне значення
         int min = Arrays.stream(testArray).min().getAsInt();
         int max = Arrays.stream(testArray).max().getAsInt();
         System.out.println("Мінімум: " + min);
