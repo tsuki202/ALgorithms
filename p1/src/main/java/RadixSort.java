@@ -1,63 +1,69 @@
-package p1.src.main.java;
+
 
 import java.util.Arrays;
 
 public class RadixSort {
-    // Модифікований CountingSort для розрядного сортування
+
+    // Допоміжний метод сортування підмасиву за певною цифрою (для radix sort)
     public static void countingSort(int[] arr, int exp) {
         int n = arr.length;
-        int[] output = new int[n];
-        int[] count = new int[10]; // лише 0-9 для кожного розряду
+        int[] output = new int[n]; // Масив для збереження проміжного результату
+        int[] count = new int[10]; // Масив для підрахунку кількості цифр від 0 до 9
 
-        // Підрахунок кількості входжень цифр в певному розряді
+        // Заповнюємо масив count нулями
+        Arrays.fill(count, 0);
+
+        // Підрахунок кількості входжень кожної цифри на поточному розряді
         for (int i = 0; i < n; i++)
             count[(arr[i] / exp) % 10]++;
 
-        // Сума попередніх значень
+        // Перетворюємо count у масив накопичених сум
         for (int i = 1; i < 10; i++)
             count[i] += count[i - 1];
 
-        // Побудова output[] з урахуванням розряду (рухаємось з кінця для стабільності)
+        // Формуємо вихідний масив, заповнюючи його у зворотному порядку для стабільності
         for (int i = n - 1; i >= 0; i--) {
-            int digit = (arr[i] / exp) % 10;
-            output[count[digit] - 1] = arr[i];
-            count[digit]--;
+            int digit = (arr[i] / exp) % 10; // Отримуємо поточну цифру
+            output[count[digit] - 1] = arr[i]; // Розміщуємо значення у правильну позицію
+            count[digit]--; // Зменшуємо лічильник
         }
 
-        // Копіюємо output назад в arr
+        // Копіюємо відсортований результат назад у вхідний масив
         System.arraycopy(output, 0, arr, 0, n);
     }
 
-    // Алгоритм RadixSort
+    // Метод Radix Sort — сортування за кожною цифрою починаючи з найменш значущої
     public static void radixSort(int[] arr) {
-        // Шукаємо максимальне число, щоб знати кількість розрядів
-        int max = Arrays.stream(arr).max().getAsInt();
+        // Знаходимо максимальне число, щоб знати кількість розрядів
+        int max = Arrays.stream(arr).max().orElse(0);
 
-        // Поступово сортуємо за кожним розрядом
+        // Сортуємо за кожним розрядом (1, 10, 100, ...)
         for (int exp = 1; max / exp > 0; exp *= 10)
             countingSort(arr, exp);
     }
 
     public static void main(String[] args) {
-        // Створення масиву з 10 випадкових значень [0..888]
+        // Створюємо масив з 10 випадкових чисел від 0 до 888
         int[] arr = new int[10];
         for (int i = 0; i < arr.length; i++)
             arr[i] = (int)(Math.random() * 889);
 
+        // Вивід початкового масиву
         System.out.println("Вхідний масив:");
         System.out.println(Arrays.toString(arr));
 
-        // Сортування
+        // Викликаємо метод сортування
         radixSort(arr);
 
-        System.out.println("Вихідний масив:");
+        // Вивід відсортованого масиву
+        System.out.println("Відсортований масив:");
         System.out.println(Arrays.toString(arr));
 
-        // Завдання: обрахувати суму всіх елементів відсортованого масиву
-        // завдання: обчислити суму елементів масиву
+        // Завдання: обчислити суму всіх елементів у масиві
         int sum = 0;
         for (int num : arr)
             sum += num;
+
         System.out.println("Сума елементів масиву: " + sum);
     }
 }

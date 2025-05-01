@@ -1,7 +1,7 @@
 
 
 import java.util.Arrays;
-import p1.src.main.java.CountingSort; // Імпортуємо ваш клас CountingSort
+
 
 public class CountingSortTest {
     public static void main(String[] args) {
