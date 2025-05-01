@@ -1,137 +1,140 @@
-
 import java.util.Arrays;
 import java.util.Random;
 
-import static java.util.Collections.swap;
-
+// Клас для реалізації базових алгоритмів сортування з підтримкою generic типів
 public class BasicAlgSort<T extends Comparable<? super T>> {
     private int left;
     private int right;
     private T[] array;
+    private boolean sortOrderFlag; // true - зростання, false - спадання
 
-    private boolean sortOrderFlag;
-
-
-
-    public BasicAlgSort(T[] array,boolean sortOrderFlag){
-        this.array = Arrays.copyOf(array, array.length);
+    // Конструктор для сортування всього масиву
+    public BasicAlgSort(T[] array, boolean sortOrderFlag) {
+        this.array = Arrays.copyOf(array, array.length); // Копіюємо масив
         this.sortOrderFlag = sortOrderFlag;
     }
 
-    public BasicAlgSort(int left,int right,T[] array,boolean sortOrderFlag ) {
+    // Конструктор для сортування діапазону масиву (left to right)
+    public BasicAlgSort(int left, int right, T[] array, boolean sortOrderFlag) {
         this.left = left;
         this.right = right;
-        this.array = Arrays.copyOfRange(array,left,right);
+        this.array = Arrays.copyOfRange(array, left, right); // Копіюємо діапазон
         this.sortOrderFlag = sortOrderFlag;
-        
     }
-    public T[] getArray() {return array;
+
+    // Метод для отримання відсортованого масиву
+    public T[] getArray() {
+        return array;
     }
-    public void bubbleSortAsc(){
+
+    // Алгоритм сортування бульбашкою (за зростанням або спаданням, залежно від прапорця)
+    public void bubbleSortAsc() {
         boolean flagForInteration = true;
-        while (flagForInteration){
+        while (flagForInteration) {
             flagForInteration = false;
-            for (int i = 1; i < array.length ; i++) {
-                if (sortOrderFlag){
-                    if(array[i].compareTo(array[i-1]) < 0){
-                        swap(i,i-1);
-                        if(!flagForInteration){
-                            flagForInteration = true;
-                        }
+            for (int i = 1; i < array.length; i++) {
+                if (sortOrderFlag) { // true — сортування за зростанням
+                    if (array[i].compareTo(array[i - 1]) < 0) {
+                        swap(i, i - 1);
+                        flagForInteration = true;
                     }
-                } else {
-                    if(array[i].compareTo(array[i-1]) > 0){
-                        swap(i,i-1);
-                        if(!flagForInteration){
-                            flagForInteration = true;
-                        }
+                } else { // false — сортування за спаданням
+                    if (array[i].compareTo(array[i - 1]) > 0) {
+                        swap(i, i - 1);
+                        flagForInteration = true;
                     }
-
                 }
-
             }
         }
     }
-    private void swap(int leftIndex,int rightIndex){
+
+    // Метод обміну елементів
+    private void swap(int leftIndex, int rightIndex) {
         T temp = array[leftIndex];
         array[leftIndex] = array[rightIndex];
         array[rightIndex] = temp;
     }
-    public void selectionSortAsc(){
+
+    // Сортування вибором за зростанням
+    public void selectionSortAsc() {
         for (int i = 0; i < array.length; i++) {
             int minIndex = i;
             T min = array[i];
-            for (int j = i+1; j < array.length ; j++) {
-                if(array[j].compareTo(min) < 0){
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[j].compareTo(min) < 0) {
                     min = array[j];
                     minIndex = j;
                 }
             }
-            if(i !=minIndex) swap(i,minIndex);
+            if (i != minIndex)
+                swap(i, minIndex);
         }
     }
-    public void insertionSortWithLinearSearchAsc(){
+
+    // Сортування вставками з лінійним пошуком (за зростанням)
+    public void insertionSortWithLinearSearchAsc() {
         for (int i = 1; i < array.length; i++) {
             T key = array[i];
-            int j = 1;
-            for (; j > 0; j-- ){
-                if (key.compareTo(array[j-1])<0){
-                    array[j]= array[j-1];
-                } else{
-                    break;
-                }
+            int j = i;
+            while (j > 0 && key.compareTo(array[j - 1]) < 0) {
+                array[j] = array[j - 1];
+                j--;
             }
             array[j] = key;
         }
     }
-    public void insertionSortWithBinarySearchAsc(){
-        for (int i = 1; i < array.length ; i++) {
+
+    // Сортування вставками з бінарним пошуком позиції вставки
+    public void insertionSortWithBinarySearchAsc() {
+        for (int i = 1; i < array.length; i++) {
             T key = array[i];
             int leftIndex = 0;
-            int rightIndex = i -1;
-            if(key.compareTo(array[i-1]) < 0){
-                while (leftIndex < rightIndex){
-                    int serIndex = (rightIndex + leftIndex)/ 2;
-                    if(key.compareTo(array[serIndex]) <0){
-                        rightIndex = serIndex;
-                    }
-                    else {
-                        leftIndex = serIndex + 1;
+            int rightIndex = i - 1;
+
+            if (key.compareTo(array[i - 1]) < 0) {
+                // Бінарний пошук позиції для вставки
+                while (leftIndex <= rightIndex) {
+                    int mid = (leftIndex + rightIndex) / 2;
+                    if (key.compareTo(array[mid]) < 0) {
+                        rightIndex = mid - 1;
+                    } else {
+                        leftIndex = mid + 1;
                     }
                 }
-                for (int j = 1; j > leftIndex ; j--) {
-                    array[j]= array[j-1];
+
+                // Зсув елементів для вставки
+                for (int j = i; j > leftIndex; j--) {
+                    array[j] = array[j - 1];
                 }
                 array[leftIndex] = key;
             }
         }
     }
 
-    // Метод для сортування за спаданням у заданому діапазоні індексів
+    // Швидке сортування по спаданню в межах заданого діапазону індексів
     public static void quickSortDescendingInRange(int[] arr, int leftIndex, int rightIndex) {
         if (leftIndex < rightIndex) {
             int pivot = partitionDescending(arr, leftIndex, rightIndex);
-            quickSortDescendingInRange(arr, leftIndex, pivot - 1); // Сортуємо ліву частину
-            quickSortDescendingInRange(arr, pivot + 1, rightIndex); // Сортуємо праву частину
+            quickSortDescendingInRange(arr, leftIndex, pivot - 1); // Ліва частина
+            quickSortDescendingInRange(arr, pivot + 1, rightIndex); // Права частина
         }
     }
 
+    // Допоміжний метод для розбиття (partition) — використовується у швидкому сортуванні
     private static int partitionDescending(int[] arr, int leftIndex, int rightIndex) {
-        int pivot = arr[rightIndex]; // Опорний елемент (останній)
+        int pivot = arr[rightIndex]; // Півот — останній елемент
         int i = leftIndex - 1;
 
         for (int j = leftIndex; j < rightIndex; j++) {
-            // Сортуємо за спаданням
-            if (arr[j] > pivot) {
+            if (arr[j] > pivot) { // Спадання
                 i++;
-                // Міняємо місцями елементи
                 int temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
         }
 
-        // Міняємо місцями опорний елемент з елементом на індекс i+1
+        // Встановлення півоту у правильну позицію
         int temp = arr[i + 1];
         arr[i + 1] = arr[rightIndex];
         arr[rightIndex] = temp;
@@ -144,9 +147,8 @@ public class BasicAlgSort<T extends Comparable<? super T>> {
         Random rand = new Random();
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
-            arr[i] = rand.nextInt(201) - 100; // Число в діапазоні [-100, 100]
+            arr[i] = rand.nextInt(201) - 100; // Випадкове число [-100, 100]
         }
         return arr;
     }
-
 }
